@@ -7,7 +7,7 @@
     <!-- HEADER -->
     <div class="mb-10">
         <h1 class="text-4xl font-bold text-gray-800">
-            Admin Dashboard
+            Main Admin Dashboard
         </h1>
 
         <p class="text-gray-500 mt-2">
