@@ -54,6 +54,16 @@
         </p>
     </div>
 
+    <!-- //TIMER -->
+    <div class="flex justify-between items-center mb-6">
+
+    <h2 class="text-xl font-bold">Quiz</h2>
+
+    <div class="bg-red-100 text-red-700 px-4 py-2 rounded-xl font-bold">
+        Time Left: <span id="timer">1:00</span>
+    </div>
+
+</div>
     <!-- Progress -->
     <div class="mb-6 flex justify-between items-center">
         <p class="text-sm text-gray-600">
@@ -73,7 +83,7 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('quiz.submit') }}">
+    <form id="quizForm" method="POST" action="{{ route('quiz.submit') }}">
         @csrf
 
         <input type="hidden" name="page" value="{{ $questions->currentPage() }}">
@@ -183,6 +193,34 @@ document.addEventListener("DOMContentLoaded", function () {
 
     checkAnswers();
 });
+</script>
+
+<script>
+    let timeLeft = 1 * 60; // 10 minutes in seconds
+
+    const timerEl = document.getElementById('timer');
+    const form = document.getElementById('quizForm');
+
+    function updateTimer() {
+        let minutes = Math.floor(timeLeft / 60);
+        let seconds = timeLeft % 60;
+
+        seconds = seconds < 1 ? '0' + seconds : seconds;
+
+        timerEl.innerHTML = `${minutes}:${seconds}`;
+        if (timeLeft <= 60) {
+            timerEl.classList.add('text-red-800');
+        }
+
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            form.submit(); // auto submit quiz
+        }
+
+        timeLeft--;
+    }
+
+    const timerInterval = setInterval(updateTimer, 1000);
 </script>
 
 </body>
