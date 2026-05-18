@@ -87,7 +87,21 @@
         @csrf
 
         <input type="hidden" name="page" value="{{ $questions->currentPage() }}">
+<div class="mb-6">
 
+    <div class="flex justify-between text-sm font-semibold text-gray-600 mb-2">
+        <span>Progress</span>
+        <span id="progressText">0 / {{ $questions->count() }}</span>
+    </div>
+
+    <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+        <div id="progressBar"
+             class="bg-blue-600 h-3 rounded-full transition-all duration-300"
+             style="width: 0%;">
+        </div>
+    </div>
+
+</div>
         @foreach($questions as $index => $q)
 
         <div class="bg-white rounded-2xl shadow-md p-6 mb-6">
@@ -103,6 +117,7 @@
                 <label class="flex items-center gap-3 p-4 border rounded-xl cursor-pointer hover:bg-gray-50 transition">
 
                     <input type="radio"
+                    class="answer-option"
                            name="answers[{{ $q->id }}]"
                            value="a"
                            class="w-5 h-5 text-blue-600">
@@ -114,6 +129,7 @@
                 <label class="flex items-center gap-3 p-4 border rounded-xl cursor-pointer hover:bg-gray-50 transition">
 
                     <input type="radio"
+                    class="answer-option"
                            name="answers[{{ $q->id }}]"
                            value="b"
                            class="w-5 h-5 text-blue-600">
@@ -125,6 +141,7 @@
                 <label class="flex items-center gap-3 p-4 border rounded-xl cursor-pointer hover:bg-gray-50 transition">
 
                     <input type="radio"
+                    class="answer-option"
                            name="answers[{{ $q->id }}]"
                            value="c"
                            class="w-5 h-5 text-blue-600">
@@ -221,6 +238,37 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const timerInterval = setInterval(updateTimer, 1000);
+</script>
+
+<script>
+    const totalQuestions = {{ $questions->count() }};
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+
+    let answeredQuestions = new Set();
+
+    const options = document.querySelectorAll('.answer-option');
+
+    options.forEach(option => {
+        option.addEventListener('change', function () {
+
+            let questionId = this.name.match(/\d+/)[0];
+
+            answeredQuestions.add(questionId);
+
+            updateProgress();
+        });
+    });
+
+    function updateProgress() {
+        let answered = answeredQuestions.size;
+
+        let percent = (answered / totalQuestions) * 100;
+
+        progressBar.style.width = percent + '%';
+
+        progressText.innerText = `${answered} / ${totalQuestions}`;
+    }
 </script>
 
 </body>

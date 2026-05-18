@@ -25,9 +25,9 @@ class QuizController extends Controller
     $answers = $request->answers ?? [];
 
     // ✅ validate FIRST
-    if (empty($answers)) {
-        return redirect()->back()->with('error', 'Please answer at least one question.');
-    }
+    // if (empty($answers)) {
+    //     return redirect()->back()->with('error', 'Please answer at least one question.');
+    // }
 
     $questions = Question::whereIn('id', array_keys($answers))->get();
 
