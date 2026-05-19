@@ -105,7 +105,18 @@
         @foreach($questions as $index => $q)
 
         <div class="bg-white rounded-2xl shadow-md p-6 mb-6">
+<div class="flex justify-between items-center mb-3">
 
+    <!-- <h3 class="font-semibold text-lg">
+        //{{ $loop->iteration }}. {{ $q->question }}
+    </h3> -->
+
+    <span id="status-{{ $q->id }}"
+          class="text-sm px-3 py-1 rounded-full bg-gray-200 text-gray-700">
+        Unanswered
+    </span>
+
+</div>
             <h2 class="text-xl font-semibold text-gray-800 mb-5">
                 {{ $questions->firstItem() + $index }}.
                 {{ $q->question }}
@@ -240,7 +251,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const timerInterval = setInterval(updateTimer, 1000);
 </script>
 
-<script>
+<<script>
     const totalQuestions = {{ $questions->count() }};
     const progressBar = document.getElementById('progressBar');
     const progressText = document.getElementById('progressText');
@@ -250,17 +261,35 @@ document.addEventListener("DOMContentLoaded", function () {
     const options = document.querySelectorAll('.answer-option');
 
     options.forEach(option => {
+
         option.addEventListener('change', function () {
 
             let questionId = this.name.match(/\d+/)[0];
 
             answeredQuestions.add(questionId);
 
+            // STATUS BADGE
+            const statusEl = document.getElementById(`status-${questionId}`);
+
+            statusEl.innerText = 'Answered';
+
+            statusEl.classList.remove(
+                'bg-gray-200',
+                'text-gray-700'
+            );
+
+            statusEl.classList.add(
+                'bg-green-100',
+                'text-green-700'
+            );
+
             updateProgress();
         });
+
     });
 
     function updateProgress() {
+
         let answered = answeredQuestions.size;
 
         let percent = (answered / totalQuestions) * 100;
@@ -268,6 +297,7 @@ document.addEventListener("DOMContentLoaded", function () {
         progressBar.style.width = percent + '%';
 
         progressText.innerText = `${answered} / ${totalQuestions}`;
+
     }
 </script>
 
